@@ -18,9 +18,9 @@ In the second case, we can basically do the same thing, but without the middle d
 
 And then if we are still 'carrying' anything by the time we get to the end, this becomes a new
 left-most digit, and the right most digit becomes the new middle digit.
-
-
 """
+
+
 class Palindrome:
     def __init__(self, left, middle):
         assert middle is None or middle < 10 and middle >= 0
@@ -52,11 +52,11 @@ class Palindrome:
         if self.middle is not None:
             if self.middle == 9:
                 self.middle = 0
-                self.add_one_left(carry = True)
+                self.add_one_left(carry=True)
             else:
                 self.middle += 1
         else:
-            self.add_one_left(carry = False)
+            self.add_one_left(carry=False)
 
     def as_int(self):
         if self.middle is None:
@@ -65,20 +65,19 @@ class Palindrome:
             l = self.left + [self.middle] + list(reversed(self.left))
 
         return int("".join(str(x) for x in l))
-    
+
     @staticmethod
     def of_int(i):
         s = str(i)
 
         if len(s) % 2 == 0:
-            left = [int(x) for x in s[:len(s) //2]]
+            left = [int(x) for x in s[: len(s) // 2]]
             middle = None
         else:
-            left = [int(x) for x in s[:len(s) //2]]
+            left = [int(x) for x in s[: len(s) // 2]]
             middle = int(s[len(left)])
 
         return Palindrome("".join(str(x) for x in left), middle)
-
 
     def __str__(self):
         return str(self.as_int())
