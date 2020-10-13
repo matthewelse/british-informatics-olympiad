@@ -10,6 +10,8 @@ Still, only lost 6 marks for to slowness. 18/24.
 """
 Stage 1: construct the map.
 """
+
+
 def construct_map(r, plan):
     all = set(i for i in range(r))
     connections = [set() for _ in range(r)]
@@ -24,7 +26,7 @@ def construct_map(r, plan):
                 picked = i
                 chosen.add(picked)
                 break
-                
+
         # print("connecting %s and %s" % ((chr(ord("A") + picked), chr(ord("A") + plan[0]))))
 
         connections[picked].add(plan[0])
@@ -44,28 +46,28 @@ def construct_map(r, plan):
     return connections
 
 
-plan, p, q = input().split(' ')
+plan, p, q = input().split(" ")
 p = int(p)
 q = int(q)
 plan = list(plan)
 r = len(plan) + 2
 
 # Rename rooms from letters to numbers. (A=0, B=1 etc.)
-plan = [ord(c) - ord('A') for c in plan]
+plan = [ord(c) - ord("A") for c in plan]
 connections = construct_map(r, plan)
 
 # Print the rooms connected to A
 
-connections = [ list(sorted(y)) for y in connections ]
+connections = [list(sorted(y)) for y in connections]
 
 for i in range(r):
     connected_to_a = []
     for y in connections[i]:
-        connected_to_a.append(chr(ord('A') + y))
-    
+        connected_to_a.append(chr(ord("A") + y))
+
     print("".join(connected_to_a))
 
-start_room = 0 # A
+start_room = 0  # A
 
 room_counts = [0 for _ in range(r)]
 room_counts[start_room] = 1
