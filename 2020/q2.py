@@ -1,10 +1,21 @@
 """
 Q2: Alpha Complex
 
-Frustratingly this is too slow for two of the larger examples (test 6 and test 8). I think
-this is mostly just an issue with Python :(.
+Frustratingly this is too slow for two of the larger examples (test 6 and test
+8). I think this is mostly just an issue with Python :(.
 
 Still, only lost 6 marks for to slowness. 18/24.
+
+2b: (i) A (ii) AAAA
+
+2c: The first time we visit a room, all of the exits have been used an even
+(zero) number of times. Each time we visit the room, we flip one exit from odd
+to even. Add up all of the rooms (1 for odd, 0 for even). If the resulting
+number is odd, the room number is even. If the resulting number is even, the
+room number is odd. (3/4)
+
+2d: There's probably a clever combinatorical way to calculate this, but I'll
+brute force it. 8! = 40k, basically nothing.
 """
 
 """
