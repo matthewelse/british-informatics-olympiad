@@ -1,6 +1,6 @@
 """2016 Q3: prime connections"""
 
-from typing import Optional, List, Tuple
+from typing import Optional, List
 from heapq import heappush, heappop
 
 
@@ -24,12 +24,11 @@ def find_primes(prime_limit):
 
 
 def shortest_path(primes, start, end):
+    seen = {start}
     q = [(1, start)]
-    s = {(1, start)}
 
     while len(q) > 0:
         (prev_len, node) = heappop(q)
-        s.remove((prev_len, node))
 
         if node == end:
             return prev_len
@@ -37,15 +36,18 @@ def shortest_path(primes, start, end):
         for i in range(24):
             diff = 1 << i
 
-            if node + diff in primes:
-                t = (prev_len + 1, node + diff)
-                if t not in s:
-                    s.add(t)
+            next_one = node + diff
+            if next_one in primes:
+                t = (prev_len + 1, next_one)
+                if next_one not in seen:
+                    seen.add(next_one)
                     heappush(q, t)
-            if node - diff in primes:
-                t = (prev_len + 1, node - diff)
-                if t not in s:
-                    s.add(t)
+
+            next_one = node - diff
+            if next_one in primes:
+                t = (prev_len + 1, next_one)
+                if next_one not in seen:
+                    seen.add(next_one)
                     heappush(q, t)
 
     print("Not found")
