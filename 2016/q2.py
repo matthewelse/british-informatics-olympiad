@@ -43,7 +43,7 @@ def solve(position, sequence_values, steps):
         while len(worklist) > 0:
             x, y = worklist.pop()
 
-            if new_state[x, y] == 4:
+            if new_state[x, y] >= 4:
                 new_state[x, y] -= 4
                 # spread out
                 for dx in (-1, 1):
@@ -64,22 +64,22 @@ def solve(position, sequence_values, steps):
     return state
 
 
-def print_solution(solution):
+def format_solution(solution, sep=' '):
     lines = []
     for y in range(5):
         y = 4 - y
         lines.append(
-            " ".join(str(solution[x, y] if (x, y) in solution else 0) for x in range(5))
+            sep.join(str(solution[x, y] if (x, y) in solution else 0) for x in range(5))
         )
 
-    print("\n".join(lines))
+    return "\n".join(lines)
 
 
 if __name__ == "__main__":
-    position, sequence_size, steps = tuple(int(x) for x in input().split())
+    position, _, steps = tuple(int(x) for x in input().split())
 
-    sequence_values = [int(input()) for _ in range(sequence_size)]
+    sequence_values = [int(x) for x in input().split()]
 
     solution = solve(position, sequence_values, steps)
 
-    print_solution(solution)
+    print(format_solution(solution))
