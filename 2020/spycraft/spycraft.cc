@@ -1,67 +1,70 @@
-/**
- * Spycraft
- *
- * I could be completely wrong with this question, but I think it only ever
- * makes sense to pick corners... I'm probably wrong, but it works for the
- * example, and I can't think of how else to answer this question.
- */
 #include <iostream>
-#include <limits>
+#include <queue>
+#include <tuple>
+#include <unordered_set>
 #include <vector>
 
 using namespace std;
 
-int distance_between(const pair<int, int> &a, const pair<int, int> &b) {
-  int dx = abs(a.first - b.first);
-  int dy = abs(a.second - b.second);
+long distance_to(tuple<long, long> start, tuple<long, long> end) {
+  long x0, y0, x1, y1;
 
-  return max(dx, dy);
+  tie(x0, y0) = start;
+  tie(x1, y1) = end;
+
+  long dx = abs(x0 - x1);
+  long dy = abs(y0 - y1);
+
+  long diagonal_distance = min(dx, dy);
+
+  return dx + dy - diagonal_distance;
 }
 
-int min_route(const vector<vector<pair<int, int>>> corners, int spy_index,
-              int corner_index) {
-  if (spy_index == corners.size() - 1) {
-    return 0;
+long shortest_path(const vector<vector<tuple<long, long>>>& boxes, size_t start,
+                   size_t end) {
+  priority_queue<tuple<long, size_t, tuple<long, long>>,
+                 std::vector<tuple<long, size_t, tuple<long, long>>>,
+                 std::greater<tuple<long, size_t, tuple<long, long>>>>
+      q;
+
+  long distance;
+  size_t box;
+  tuple<long, long> corner;
+
+  for (auto corner : boxes[start]) {
+    q.push({0, start, corner});
   }
 
-  int min_distance = numeric_limits<int>::max();
+  while (!q.empty()) {
+    tie(distance, box, corner) = q.top();
+    q.pop();
 
-  for (int next_corner = 0; next_corner < corners[spy_index + 1].size();
-       next_corner++) {
-    int distance = distance_between(corners[spy_index][corner_index],
-                                    corners[spy_index + 1][next_corner]) +
-                   min_route(corners, spy_index + 1, next_corner);
+    if (box == end) {
+      return distance;
+    }
 
-    if (distance < min_distance) {
-      min_distance = distance;
+    for (auto next_corner : boxes[box + 1]) {
+      q.push(
+          {distance + distance_to(corner, next_corner), box + 1, next_corner});
     }
   }
 
-  return min_distance;
+  return 0;
 }
 
 int main() {
-  int c, p, q, r, s;
-  vector<vector<pair<int, int>>> corners;
+  long num_contacts, x0, y0, x1, y1;
+  vector<vector<tuple<long, long>>> boxes;
 
-  cin >> c;
+  cin >> num_contacts;
 
-  for (int i = 0; i < c; i++) {
-    cin >> p >> q >> r >> s;
+  for (long i = 0; i < num_contacts; i++) {
+    cin >> x0 >> y0 >> x1 >> y1;
 
-    corners.emplace_back(4);
-
-    corners[i][0] = make_pair(p, q);
-    corners[i][1] = make_pair(r, s);
-    corners[i][2] = make_pair(p, s);
-    corners[i][3] = make_pair(r, q);
+    boxes.push_back({{x0, y0}, {x1, y1}, {x1, y0}, {x0, y1}});
   }
 
-  int best = numeric_limits<int>::max();
+  long length = shortest_path(boxes, 0, boxes.size() - 1);
 
-  for (int i = 0; i < 4; i++) {
-    best = min(min_route(corners, 0, i), best);
-  }
-
-  cout << best << endl;
+  cout << length << endl;
 }
