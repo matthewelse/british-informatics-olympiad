@@ -29,10 +29,17 @@ def shortest_path(boxes, start, end):
 
         if box == end:
             return distance
-        
+
         for next_corner in boxes[box + 1]:
-            heappush(q, (distance + distance_between(corner, next_corner), box + 1, next_corner))
-        
+            heappush(
+                q,
+                (
+                    distance + distance_between(corner, next_corner),
+                    box + 1,
+                    next_corner,
+                ),
+            )
+
     raise RuntimeError("Route not found.")
 
 
