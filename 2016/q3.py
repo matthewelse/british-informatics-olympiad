@@ -1,7 +1,7 @@
 """2016 Q3: prime connections"""
 
 from typing import Optional, List
-from heapq import heappush, heappop
+from collections import deque
 
 
 def find_primes(prime_limit):
@@ -25,10 +25,10 @@ def find_primes(prime_limit):
 
 def shortest_path(primes, start, end):
     seen = {start}
-    q = [(1, start)]
+    q = deque([(1, start)])
 
     while len(q) > 0:
-        (prev_len, node) = heappop(q)
+        (prev_len, node) = q.popleft()
 
         if node == end:
             return prev_len
@@ -37,18 +37,16 @@ def shortest_path(primes, start, end):
             diff = 1 << i
 
             next_one = node + diff
-            if next_one in primes:
+            if next_one in primes and next_one not in seen:
                 t = (prev_len + 1, next_one)
-                if next_one not in seen:
-                    seen.add(next_one)
-                    heappush(q, t)
+                seen.add(next_one)
+                q.append(t)
 
             next_one = node - diff
-            if next_one in primes:
+            if next_one in primes and next_one not in seen:
                 t = (prev_len + 1, next_one)
-                if next_one not in seen:
-                    seen.add(next_one)
-                    heappush(q, t)
+                seen.add(next_one)
+                q.append(t)
 
     print("Not found")
     return None
