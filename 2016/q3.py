@@ -1,33 +1,36 @@
 """2016 Q3: prime connections"""
 
 from math import log2
-from typing import Optional, List
 from collections import deque
-
 
 def find_primes(prime_limit):
     primes = set()
-    numbers: List[Optional[int]] = list(range(0, prime_limit + 1))
 
-    numbers[0] = None
-    numbers[1] = None
+    # For a performance hack, you can swap this for an array, but as it is, a
+    # list is just about fast enough.
+    #
+    # numbers = array.array('L', range(0, prime_limit + 1))
+    numbers = list(range(0, prime_limit + 1))
+
+    numbers[0] = 0
+    numbers[1] = 0
 
     for i in range(2, prime_limit + 1):
-        if numbers[i] is None:
+        if numbers[i] == 0:
             continue
 
         primes.add(i)
 
         for j in range(2 * i, prime_limit + 1, i):
-            numbers[j] = None
+            numbers[j] = 0
 
     return primes
 
 
 def shortest_path(primes, start, end, max_prime):
-    seen = {start}
     q = deque([(1, start)])
     upper_bit_limit = int(log2(max_prime)) + 1
+    primes.remove(start)
 
     while len(q) > 0:
         (prev_len, node) = q.popleft()
@@ -39,16 +42,14 @@ def shortest_path(primes, start, end, max_prime):
             diff = 1 << i
 
             next_one = node + diff
-            if next_one in primes and next_one not in seen:
-                t = (prev_len + 1, next_one)
-                seen.add(next_one)
-                q.append(t)
+            if next_one in primes:
+                primes.remove(next_one)
+                q.append((prev_len + 1, next_one))
 
             next_one = node - diff
-            if next_one in primes and next_one not in seen:
-                t = (prev_len + 1, next_one)
-                seen.add(next_one)
-                q.append(t)
+            if next_one in primes:
+                primes.remove(next_one)
+                q.append((prev_len + 1, next_one))
 
     print("Not found")
     return None

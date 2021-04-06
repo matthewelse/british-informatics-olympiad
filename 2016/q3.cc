@@ -32,11 +32,11 @@ unordered_set<int> primes(int prime_limit) {
 
 int compute_shortest_path(unordered_set<int> &definite_primes, int start,
                           int end) {
-  unordered_set<int> seen;
   // distance * number
   queue<pair<int, int>> q;
 
   q.push({1, start});
+  definite_primes.erase(start);
 
   while (!q.empty()) {
     pair<int, int> next = q.front();
@@ -52,15 +52,14 @@ int compute_shortest_path(unordered_set<int> &definite_primes, int start,
     for (int i = 0; i < 24; i++) {
       int diff = 1 << i;
 
-      if (definite_primes.count(node + diff) == 1 &&
-          seen.count(node + diff) == 0) {
-        seen.insert(node + diff);
+      if (definite_primes.count(node + diff) == 1) {
+        definite_primes.erase(node + diff);
         q.push({distance + 1, node + diff});
       }
 
-      if (definite_primes.count(node - diff) == 1 &&
-          seen.count(node - diff) == 0) {
-        seen.insert(node - diff);
+      if (definite_primes.count(node - diff) == 1
+          ) {
+        definite_primes.erase(node - diff);
         q.push({distance + 1, node - diff});
       }
     }
