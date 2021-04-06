@@ -1,7 +1,9 @@
 import q3
 
+
 def test_example():
     assert q3.solve(37) == "AB"
+
 
 def test_case0():
     assert q3.solve(1) == "A"
