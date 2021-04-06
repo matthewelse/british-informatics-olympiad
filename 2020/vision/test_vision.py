@@ -1,6 +1,3 @@
-import logging
-import sys
-
 import cppimport
 from hypothesis import given
 from hypothesis import strategies as st
