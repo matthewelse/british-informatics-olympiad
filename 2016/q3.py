@@ -1,5 +1,6 @@
 """2016 Q3: prime connections"""
 
+from math import log2
 from typing import Optional, List
 from collections import deque
 
@@ -23,9 +24,10 @@ def find_primes(prime_limit):
     return primes
 
 
-def shortest_path(primes, start, end):
+def shortest_path(primes, start, end, max_prime):
     seen = {start}
     q = deque([(1, start)])
+    upper_bit_limit = int(log2(max_prime)) + 1
 
     while len(q) > 0:
         (prev_len, node) = q.popleft()
@@ -33,7 +35,7 @@ def shortest_path(primes, start, end):
         if node == end:
             return prev_len
 
-        for i in range(24):
+        for i in range(upper_bit_limit):
             diff = 1 << i
 
             next_one = node + diff
@@ -59,7 +61,7 @@ def solve(prime_limit, start, end):
     """
 
     primes = find_primes(prime_limit)
-    return shortest_path(primes, start, end)
+    return shortest_path(primes, start, end, prime_limit)
 
 
 if __name__ == "__main__":
