@@ -27,63 +27,63 @@ then the thing in position 5
 """
 
 
-if __name__ == "__main__":
-    num_idols = int(input())
-
-    correct = [i for i in range(num_idols + 2)]
-    starting = [0] + [int(input()) for _ in range(num_idols)] + [num_idols + 1]
+def solve(problem):
+    solution = []
+    correct = list(range(len(problem)))
 
     first_idol_num, first_idol_pos = min(
-        (x, i) for (i, x) in enumerate(starting) if i != x
+        (x, i) for (i, x) in enumerate(problem) if i != x
     )
 
-    # print("swapping %d and %d" % (first_idol_num, 0))
-    starting[first_idol_pos] = starting[0]
-    starting[0] = first_idol_num
+    problem[first_idol_pos] = problem[0]
+    problem[0] = first_idol_num
 
     last_moved = first_idol_num
 
     moves = set()
     moves.add((0, first_idol_pos))
-    # print(starting)
-    print("%d %d" % (0, first_idol_num))
+    solution.append((0, first_idol_num))
 
-    while correct != starting:
+    while correct != problem:
         # print(starting, last_moved)
-        if starting[last_moved] == last_moved:
-            last_moved, _ = min(
-                (i, x)
-                for (i, x) in enumerate(starting)
-                if i != x
-            )
-        
+        if problem[last_moved] == last_moved:
+            last_moved, _ = min((i, x) for (i, x) in enumerate(problem) if i != x)
+
         if last_moved == 0:
             # try putting the thing in position 0 in the right place
-            last_moved = starting[0]
+            last_moved = problem[0]
 
-            tmp = starting[last_moved]
-            starting[last_moved] = last_moved
-            starting[0] = tmp
+            tmp = problem[last_moved]
+            problem[last_moved] = last_moved
+            problem[0] = tmp
 
-            print("%d %d" % (starting[0], last_moved))
+            solution.append((problem[0], last_moved))
             moves.add((0, last_moved))
             continue
 
-        if (last_moved, len(starting) - 1) in moves:
-            # input()
-            # print ("BUG (%d, %d)" % (last_moved, len(starting) - 1), moves)
-
+        if (last_moved, len(problem) - 1) in moves:
+            print ("BUG (%d, %d)" % (last_moved, len(problem) - 1), moves)
             pass
 
-        tmp = starting[last_moved]
-        starting[last_moved] = starting[-1]
-        starting[-1] = tmp
+        tmp = problem[last_moved]
+        problem[last_moved] = problem[-1]
+        problem[-1] = tmp
 
-        print("%d %d" % (starting[last_moved], starting[-1]))
+        solution.append((problem[last_moved], problem[-1]))
 
-        moves.add((last_moved, len(starting) - 1))
+        moves.add((last_moved, len(problem) - 1))
 
         last_moved = tmp
 
-    # print(starting)
+    return solution 
+
+
+if __name__ == "__main__":
+    num_idols = int(input())
+
+    starting = [0] + [int(input()) for _ in range(num_idols)] + [num_idols + 1]
+
+    for (l, r) in solve(starting):
+        print(l, r)
+        
     print(-1, -1)
